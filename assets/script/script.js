@@ -10,20 +10,27 @@ var firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 var database = firebase.database();
+var name = "";
+var place = "";
+var first;
+var freq = 0;
+//need to write a code that on load sets the HTML of the train schedule from database
+//then we can call it on page load, then once again after a new train is added
+function pageLoad() {}
 
 function submitClick() {
   $("#submit").on("click", function() {
     event.preventDefault();
-    let name = $("#trainName")
+    name = $("#trainName")
       .val()
       .trim();
-    let place = $("#destination")
+    place = $("#destination")
       .val()
       .trim();
-    let first = $("#firstTrain")
+    first = $("#firstTrain")
       .val()
       .trim();
-    let freq = $("#freq")
+    freq = $("#freq")
       .val()
       .trim();
     console.log(name, place, first, freq);
@@ -36,4 +43,21 @@ function submitClick() {
     });
   });
 }
+database.ref().on("child_added", function(childSnapshot) {
+  console.log(childSnapshot.val().Train_Name);
+  console.log(childSnapshot.val().Destination);
+  console.log(childSnapshot.val().First_Train);
+  console.log(childSnapshot.val().Frequency);
+  $("#schedule").html(
+    "<tr><th scope='row'>" +
+      childSnapshot.val().Train_Name +
+      " </th><td>" +
+      childSnapshot.val().Destination +
+      " <td>" +
+      childSnapshot.val().First_Train +
+      " </td> </td> <td>" +
+      childSnapshot.val().Frequency +
+      " </td> <td>Some moment.js function</td></tr>"
+  );
+});
 submitClick();
