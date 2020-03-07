@@ -57,24 +57,26 @@ function submitClick() {
 }
 //apparently, the child_added listener triggers once for each child in the database(looked it up in the documentation because i couldnt figure out how the dom was populating on document load), AND if a child is ever added..so we stumbled upon a fast/most efficient in this case, way to pop the DOM with our firebase data...lucky us hah
 database.ref().on("child_added", function(childSnapshot) {
-  console.log(childSnapshot.val().Train_Name);
-  console.log(childSnapshot.val().Destination);
+  let train = childSnapshot.val().Train_Name;
+  let place = childSnapshot.val().Destination;
   let first = childSnapshot.val().First_Train;
   let freq = childSnapshot.val().Frequency;
   let timeLeft = moment().diff(moment.unix(parseInt(first)), "minutes") % freq;
   let minLeft = freq - timeLeft;
+  let arrival = moment()
+    .add(minLeft, "m")
+    .format("hh:mm A");
+  console.log(arrival);
   console.log(minLeft);
-  let x = parseInt(minLeft);
-  console.log(x);
   $("#schedule").prepend(
     "<tr><td scope='row'>" +
-      childSnapshot.val().Train_Name +
+      train +
       " </td><td>" +
-      childSnapshot.val().Destination +
+      place +
       " <td>" +
-      childSnapshot.val().Frequency +
+      freq +
       " </td> </td> <td>" +
-      childSnapshot.val().Frequency +
+      arrival +
       " </td> <td>" +
       minLeft +
       "</td></tr>"
