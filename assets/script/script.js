@@ -55,31 +55,35 @@ function submitClick() {
     }
   });
 }
-//apparently, the child_added listener triggers once for each child in the database(looked it up in the documentation because i couldnt figure out how the dom was populating on document load), AND if a child is ever added..so we stumbled upon a fast/most efficient in this case, way to pop the DOM with our firebase data...lucky us hah
-database.ref().on("child_added", function(childSnapshot) {
-  let train = childSnapshot.val().Train_Name;
-  let place = childSnapshot.val().Destination;
-  let first = childSnapshot.val().First_Train;
-  let freq = childSnapshot.val().Frequency;
-  let timeLeft = moment().diff(moment.unix(parseInt(first)), "minutes") % freq;
-  let minLeft = freq - timeLeft;
-  let arrival = moment()
-    .add(minLeft, "m")
-    .format("hh:mm A");
-  console.log(arrival);
-  console.log(minLeft);
-  $("#schedule").prepend(
-    "<tr><td scope='row'>" +
-      train +
-      " </td><td>" +
-      place +
-      " <td>" +
-      freq +
-      " </td> </td> <td>" +
-      arrival +
-      " </td> <td>" +
-      minLeft +
-      "</td></tr>"
-  );
-});
+//so added an interval...issue is it doesnt populate page until first interval, makes sense. it also duplicates, doesnt update. so need to fix that.
+var myVar = setInterval(listen, 60000);
+function listen() {
+  database.ref().on("child_added", function(childSnapshot) {
+    let train = childSnapshot.val().Train_Name;
+    let place = childSnapshot.val().Destination;
+    let first = childSnapshot.val().First_Train;
+    let freq = childSnapshot.val().Frequency;
+    let timeLeft =
+      moment().diff(moment.unix(parseInt(first)), "minutes") % freq;
+    let minLeft = freq - timeLeft;
+    let arrival = moment()
+      .add(minLeft, "m")
+      .format("hh:mm A");
+    console.log(arrival);
+    console.log(minLeft);
+    $("#schedule").prepend(
+      "<tr><td scope='row'>" +
+        train +
+        " </td><td>" +
+        place +
+        " <td>" +
+        freq +
+        " </td> </td> <td>" +
+        arrival +
+        " </td> <td>" +
+        minLeft +
+        "</td></tr>"
+    );
+  });
+}
 submitClick();
