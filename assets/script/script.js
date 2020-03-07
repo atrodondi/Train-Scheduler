@@ -14,9 +14,6 @@ var name = "";
 var place = "";
 var first;
 var freq = 0;
-//need to write a code that on load sets the HTML of the train schedule from database
-//then we can call it on page load, then once again after a new train is added
-function pageLoad() {}
 
 function submitClick() {
   $("#submit").on("click", function() {
@@ -50,25 +47,37 @@ function submitClick() {
         First_Train: first,
         Frequency: freq
       });
+      $("#trainName").val("");
+      $("#destination").val("");
+      $("#firstTrain").val("");
+      $("#freq").val("");
       console.log(name, place, first, freq);
     }
   });
 }
+//apparently, the child_added listener triggers once for each child in the database(looked it up in the documentation because i couldnt figure out how the dom was populating on document load), AND if a child is ever added..so we stumbled upon a fast/most efficient in this case, way to pop the DOM with our firebase data...lucky us hah
 database.ref().on("child_added", function(childSnapshot) {
   console.log(childSnapshot.val().Train_Name);
   console.log(childSnapshot.val().Destination);
-  console.log(childSnapshot.val().First_Train);
-  console.log(childSnapshot.val().Frequency);
+  let first = childSnapshot.val().First_Train;
+  let freq = childSnapshot.val().Frequency;
+  let timeLeft = moment().diff(moment.unix(parseInt(first)), "minutes") % freq;
+  let minLeft = freq - timeLeft;
+  console.log(minLeft);
+  let x = parseInt(minLeft);
+  console.log(x);
   $("#schedule").prepend(
-    "<tr><th scope='row'>" +
+    "<tr><td scope='row'>" +
       childSnapshot.val().Train_Name +
-      " </th><td>" +
+      " </td><td>" +
       childSnapshot.val().Destination +
       " <td>" +
-      childSnapshot.val().First_Train +
+      childSnapshot.val().Frequency +
       " </td> </td> <td>" +
       childSnapshot.val().Frequency +
-      " </td> <td>Some moment.js function</td></tr>"
+      " </td> <td>" +
+      minLeft +
+      "</td></tr>"
   );
 });
 submitClick();
