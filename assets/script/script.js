@@ -21,26 +21,37 @@ function pageLoad() {}
 function submitClick() {
   $("#submit").on("click", function() {
     event.preventDefault();
-    name = $("#trainName")
-      .val()
-      .trim();
-    place = $("#destination")
-      .val()
-      .trim();
-    first = $("#firstTrain")
-      .val()
-      .trim();
-    freq = $("#freq")
-      .val()
-      .trim();
-    console.log(name, place, first, freq);
+    if (
+      ($("#trainName").val() == "") |
+      ($("#destination").val() == "") |
+      ($("#firstTrain").val() == "") |
+      ($("#freq").val() == "")
+    ) {
+      alert(
+        "Type something into the empty boxes to add train info, it appears you are missing some information!"
+      );
+    } else {
+      name = $("#trainName")
+        .val()
+        .trim();
 
-    database.ref().push({
-      Train_Name: name,
-      Destination: place,
-      First_Train: first,
-      Frequency: freq
-    });
+      place = $("#destination")
+        .val()
+        .trim();
+      first = $("#firstTrain")
+        .val()
+        .trim();
+      freq = $("#freq")
+        .val()
+        .trim();
+      database.ref().push({
+        Train_Name: name,
+        Destination: place,
+        First_Train: first,
+        Frequency: freq
+      });
+      console.log(name, place, first, freq);
+    }
   });
 }
 database.ref().on("child_added", function(childSnapshot) {
@@ -48,7 +59,7 @@ database.ref().on("child_added", function(childSnapshot) {
   console.log(childSnapshot.val().Destination);
   console.log(childSnapshot.val().First_Train);
   console.log(childSnapshot.val().Frequency);
-  $("#schedule").html(
+  $("#schedule").prepend(
     "<tr><th scope='row'>" +
       childSnapshot.val().Train_Name +
       " </th><td>" +
