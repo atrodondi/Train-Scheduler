@@ -59,12 +59,12 @@ function submitClick() {
     }
   });
 }
-//so added an interval...issue is it doesnt populate page until first interval, makes sense. it also duplicates, doesnt update. so need to fix that. need to write condition if it is inputting the same item, don't
 database.ref().on("child_added", function(childSnapshot) {
   let train = childSnapshot.val().Train_Name;
   let place = childSnapshot.val().Destination;
   let first = childSnapshot.val().First_Train;
   let freq = childSnapshot.val().Frequency;
+  //realiazed i needed to format the given start time to make it a time from today, not just some time that couldnt be computed
   let diff = moment
     .duration(moment().diff(moment(first, "HH:mm")), "milliseconds")
     .asMinutes();
