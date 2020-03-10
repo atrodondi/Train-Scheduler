@@ -31,6 +31,7 @@ function submitClick() {
         "Type something into the empty boxes to add train info, it appears you are missing some information!"
       );
     } else {
+      //grabbing the values from input
       name = $("#trainName")
         .val()
         .trim();
@@ -44,6 +45,7 @@ function submitClick() {
       freq = $("#freq")
         .val()
         .trim();
+      //storing them in database
       database.ref().push({
         Train_Name: name,
         Destination: place,
@@ -56,19 +58,22 @@ function submitClick() {
       $("#firstTrain").val("");
       $("#freq").val("");
       console.log(name, place, first, freq);
+      alert("New Train Added!");
     }
   });
 }
+//when the page loads, each train object in the database populates the page. When a new train is added, it is pushed to the DOM at the top of the Train Schedule
 database.ref().on("child_added", function(childSnapshot) {
   let train = childSnapshot.val().Train_Name;
   let place = childSnapshot.val().Destination;
   let first = childSnapshot.val().First_Train;
   let freq = childSnapshot.val().Frequency;
-  //realiazed i needed to format the given start time to make it a time from today, not just some time that couldnt be computed
+  //realized i needed to format the given start time to make it a time from today, not just some time that couldnt be computed, i kept getting invalid date.
   let diff = moment
     .duration(moment().diff(moment(first, "HH:mm")), "milliseconds")
     .asMinutes();
   let timeLeft = freq - (Math.floor(diff) % freq);
+  //lots of googling, stack overflow searching. came up on Conditional(ternary) operator. So here is where the issue of first train time on today issue was solved. if the diff is positive, meaning first train has come already(diff = difference of time between now and first train time), then we add the time until the next train to right now, and get the arrival time. if diff is negative, as in the first time hasnt happened yet, the next arrival is the first train time, whenever that is
   let arrival =
     diff > 0 ? moment().add(timeLeft, "minutes") : moment(first, "HH:mm");
   let minLeft = Math.ceil(

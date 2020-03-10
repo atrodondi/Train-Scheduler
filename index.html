@@ -4,27 +4,33 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Train Scheduler</title>
+    <!-- bootstrap -->
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
       integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
       crossorigin="anonymous"
     />
+    <!-- my style sheet -->
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <!-- jQuery -->
     <script
       src="https://code.jquery.com/jquery-3.4.1.js"
       integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
       crossorigin="anonymous"
     ></script>
+    <!-- firebase stuff -->
     <script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-database.js"></script>
+    <!-- moment.js stuff for dates/time -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
   </head>
   <body>
     <div class="container-fluid">
       <div class="jumbotron background-dark text-center">
-        <h1>Best Train Around Train Scheduler, Dude!</h1>
-        <h2>Give Us the money, We Give Yee The Good Train</h2>
+        <h1>Minimalist Train Schedule</h1>
+        <h2>Give Us a Few, Returns a Choo Choo</h2>
       </div>
       <div class="card">
         <div class="card-header ">
@@ -41,6 +47,7 @@
                 <th scope="col">Minutes Away</th>
               </tr>
             </thead>
+            <!-- This will be populated when DOM loads with whatever is in database, or whenever a train is added via user Input -->
             <tbody id="schedule"></tbody>
           </table>
         </div>
@@ -60,7 +67,7 @@
             </div>
             <div class="form-group">
               <label for="firstTrain"
-                >First Train Time (HHmm - military time)</label
+                >First Train Time (HH:mm - military time)</label
               >
               <input class="form-control" type="text" id="firstTrain" />
             </div>
@@ -75,6 +82,7 @@
         </div>
       </div>
     </div>
+    <!-- my script -->
     <script src="assets/script/script.js"></script>
   </body>
 </html>
