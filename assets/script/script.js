@@ -57,7 +57,6 @@ function submitClick() {
       $("#destination").val("");
       $("#firstTrain").val("");
       $("#freq").val("");
-      console.log(name, place, first, freq);
       alert("New Train Added!");
     }
   });
